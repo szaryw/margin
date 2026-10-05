@@ -175,6 +175,7 @@ Nothing else is sent: no screenshots, other tabs, clipboard contents, the rest o
 
 ## Troubleshooting
 
+- **`build.sh` fails with "this SDK is not supported by the compiler" or "redefinition of module 'SwiftBridging'"**: the Xcode Command Line Tools on that Mac are half-updated, and no Swift app will build until they're fixed. Reinstall them with `sudo rm -rf /Library/Developer/CommandLineTools`, then `xcode-select --install`, and build again. If you have Xcode, `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer` works too.
 - **"Margin needs Accessibility access"**: turn it on as described in step 3, then quit and reopen Margin. If it's already on but still fails after a rebuild, remove Margin from the list, add it again, and see the signing note above.
 - **"⌃⌥M is taken"**: another app has the shortcut. Quit that app and reopen Margin.
 - **"Margin's server isn't running"**: open **Open Server Log** from the menu-bar **M**. Running `npm start` in a terminal shows the same output. When a server is already running, the app uses it instead of starting its own.
