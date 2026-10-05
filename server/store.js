@@ -41,7 +41,31 @@ export function createStore(folder) {
         : m.text.trim() + (m.sources?.length ? `\n\n<small>Sources: ${m.sources.map(x => `[${x.title}](${x.url})`).join(', ')}</small>` : ''));
       return [`## ${when}`, `> ${h.quote.trim().replace(/\n/g, '\n> ')}`, h.note && `*Note:* ${h.note}`, ...talk].filter(Boolean).join('\n\n');
     });
-    return `# ${s.title}\n\n${meta ? `*${meta}*\n\n` : ''}${sections.join('\n\n---\n\n')}\n`;
+    // Properties up top, so Obsidian (and Dataview) can sort and query sources: every book, everything from this month…
+    const day = t => new Date(t).toISOString().slice(0, 10);
+    const props = {
+      title: s.title, author: s.author, type: s.kind === 'file' ? 'pdf' : s.kind, url: s.url, path: s.path, app: s.app,
+      highlights: list.length, first_highlight: day(list[0].created), last_highlight: day(list.at(-1).created)
+    };
+    const yaml = Object.entries(props).filter(([, v]) => v !== undefined && v !== '')
+      .map(([k, v]) => `${k}: ${typeof v === 'number' || /^\d{4}-\d\d-\d\d$/.test(v) ? v : JSON.stringify(v)}`).join('\n');
+    return `---\n${yaml}\n---\n\n# ${s.title}\n\n${meta ? `*${meta}*\n\n` : ''}${sections.join('\n\n---\n\n')}\n`;
+  }
+
+  /** Highlights matching every word of the query, in the passage, note, conversation or source; best matches first. */
+  function search(query) {
+    const words = String(query).toLowerCase().match(/[\p{L}\p{N}$]+/gu) || [];
+    if (!words.length) return [];
+    return kept().map(h => {
+      const fields = [[h.quote, 3], [h.note, 3], [h.source.title, 2], [h.source.author, 2], ...h.messages.map(m => [m.text, 1])];
+      let score = 0;
+      for (const w of words) {
+        const hits = fields.reduce((n, [text, weight]) => n + (text?.toLowerCase().split(w).length - 1 || 0) * weight, 0);
+        if (!hits) return null;
+        score += Math.log(1 + hits);
+      }
+      return { h, score };
+    }).filter(Boolean).sort((a, b) => b.score - a.score || b.h.created - a.h.created).map(r => r.h);
   }
 
   function save(h) {
@@ -55,6 +79,7 @@ export function createStore(folder) {
     folder,
     get: id => { const h = highlights.get(id); if (!h) throw Object.assign(new Error('Highlight not found.'), { status: 404 }); return h; },
     all: () => kept().sort((a, b) => b.created - a.created),
+    search,
 
     create(c) {
       // PDFs sometimes drop the space before an opening quote mark: "shape the“free” side".

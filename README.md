@@ -4,11 +4,13 @@
 
 A question pops into your head halfway through a paragraph. Select the passage, press **⌃⌥M**, and a small card opens right beside it, in Chrome, Apple Books, Preview or almost any other Mac app. Jot a note, or ask a question and get an answer that already knows what you're reading. No copying into a chat window, no switching apps, and you never lose your place.
 
-![Selecting a sentence in a PDF, pressing ⌃⌥M, asking a question and getting an answer right beside the text](docs/demo.gif)
+And nothing you read that way is lost afterwards. Every highlight, note and answer is kept as plain Markdown, so over time it adds up to a searchable record of what you've read and thought about: the raw material for a digital garden or a Zettelkasten.
+
+![Selecting a sentence in a Nieman Lab story, pressing ⌃⌥M, asking which publishers have licensing deals with OpenAI, and getting a sourced answer right beside the text](docs/demo.gif)
 
 - **Works where you already read.** Browsers, Apple Books, PDFs, Notes: if you can select the text, Margin can pick it up.
 - **Answers in context.** The model sees the passage, the page around it, and the book or article it came from. When that isn't enough, it can search the web.
-- **Notes you own.** Everything you keep lands in plain Markdown, one file per book or article. Point the folder at your Obsidian vault and your highlights show up there.
+- **A knowledge base that builds itself.** Everything you keep lands in plain Markdown, one file per book or article, with properties Obsidian can sort and query. Search across all of it with `npm run search`, or point the folder at your vault and link your own notes to it.
 - **Private by default.** Nothing leaves your Mac until you ask a question, and then only the passage, where it came from and the text around it. Margin has no account, no cloud of its own and no tracking: your notes are just files on your disk.
 
 ---
@@ -110,16 +112,22 @@ The answer works from the article's own numbers, because Margin sent the page ar
 
 ![Writing a note on a sentence in a PDF open in Preview](docs/screenshots/04-pdf.png)
 
-### Your notes
+### Your notes, and finding them again
 
-Everything you keep ends up in one Markdown file per book or article, in `~/Documents/Margin` (or the folder in `MARGIN_DIR`). Each file collects every highlight, note and conversation for that source, oldest first. You get a reading log that writes itself:
-
-![The Markdown file Margin wrote for the Nieman Lab story, open in iA Writer](docs/screenshots/05-notes.png)
+Everything you keep ends up in one Markdown file per book or article, in `~/Documents/Margin` (or the folder in `MARGIN_DIR`). Each file collects every highlight, note and conversation for that source, oldest first, under a few properties describing the source:
 
 ```markdown
-# Algorithmic attention rents a theory of digital platform market power
+---
+title: "Algorithmic attention rents a theory of digital platform market power"
+type: "pdf"
+path: "/Users/you/Downloads/algorithmic-attention-rents-a-theory-of-digital-platform-market-power.pdf"
+app: "Preview"
+highlights: 2
+first_highlight: 2026-10-05
+last_highlight: 2026-10-05
+---
 
-*/Users/you/Downloads/algorithmic-attention-rents-a-theory-of-digital-platform-market-power.pdf*
+# Algorithmic attention rents a theory of digital platform market power
 
 ## 5 Oct 2026, 20:44
 
@@ -127,6 +135,38 @@ Everything you keep ends up in one Markdown file per book or article, in `~/Docu
 
 *Note:* Disclosure as the remedy: compare Wu's neutrality rules. Which metrics exactly?
 ```
+
+**Search everything you've read.** `npm run search` looks through every passage, note, question and answer, across all your sources, and lists the best matches first. Here one word connects a passage in a book with two highlights on a paper:
+
+```
+$ npm run search -- platforms
+
+The Age of Extraction · Tim Wu  (5 Oct 2026)
+  > But for the longer term, we need neutrality rules for platforms that both preserve the economic flourishing…
+  Q: What would neutrality rules look like for AI platforms?
+  ~/Documents/Margin/The Age of Extraction.md
+
+Algorithmic attention rents a theory of digital platform market power  (5 Oct 2026)
+  > We argue that regulations should mandate the disclosure of the operating metrics that platforms use…
+  Note: Disclosure as the remedy: compare Wu's neutrality rules. Which metrics exactly?
+  ~/Documents/Margin/Algorithmic attention rents a theory of digital platform market power.md
+
+3 highlights match "platforms".
+```
+
+Add `--json` to get the full matches (passages, notes and whole conversations) for scripts or other tools.
+
+**Use it in Obsidian.** Set `MARGIN_DIR` to a folder inside your vault (here, one called `Margin`) and every book and article you've read shows up as a note, with its properties shown at the top. With the Dataview plugin, you can list them like any other notes:
+
+````markdown
+```dataview
+TABLE author, highlights, last_highlight AS "last read"
+FROM "Margin"
+SORT last_highlight DESC
+```
+````
+
+**Build a digital garden or Zettelkasten on top.** Treat Margin's files as your *literature notes*: what the source said, and what you asked about it in the moment. Write your own *permanent notes* separately and link to them with `[[The Age of Extraction]]`. Keep your own writing in your own files, because Margin rewrites a source's file each time you add a highlight to it.
 
 ### What's saved when you capture
 
@@ -200,6 +240,7 @@ Nothing else is sent: no screenshots, other tabs, clipboard contents, the rest o
 ```
 app/       Swift menu-bar app: hotkey, reading the selection, the floating card window
 server/    Node server with no npm dependencies: saves highlights, calls the model, serves the card
+  search.js  npm run search: finds highlights across every source
   card/    The card itself (plain HTML, CSS and JS) shown in the app's window
 ```
 

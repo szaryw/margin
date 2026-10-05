@@ -15,7 +15,7 @@ test('a highlight is only written once it is kept', () => {
   assert.equal(readdirSync(dir).filter(f => f.endsWith('.md')).length, 0);
   store.keep(h);
   const md = readFileSync(join(dir, 'Middlemarch.md'), 'utf8');
-  assert.match(md, /^# Middlemarch/);
+  assert.match(md, /^# Middlemarch$/m);
   assert.match(md, /\*George Eliot\*/);
   assert.match(md, /> It is a narrow mind/);
 });
@@ -83,4 +83,23 @@ test('.env values are read, quoted or not', () => {
   const file = join(temp(), '.env');
   writeFileSync(file, '# comment\nOPENAI_API_KEY="sk-test"\nMARGIN_MODEL=gpt-5.5\nMARGIN_DIR=~/Notes\n');
   assert.deepEqual(readEnv(file), { OPENAI_API_KEY: 'sk-test', MARGIN_MODEL: 'gpt-5.5', MARGIN_DIR: '~/Notes' });
+});
+
+test('notes start with properties Obsidian can query', () => {
+  const dir = temp(), store = createStore(dir);
+  store.keep(store.create(book));
+  const md = readFileSync(join(dir, 'Middlemarch.md'), 'utf8');
+  assert.match(md, /^---\ntitle: "Middlemarch"\nauthor: "George Eliot"\ntype: "book"\napp: "Books"\nhighlights: 1\nfirst_highlight: \d{4}-\d\d-\d\d\nlast_highlight: \d{4}-\d\d-\d\d\n---\n\n# Middlemarch/);
+});
+
+test('search finds highlights by passage, note or conversation, and needs every word', () => {
+  const store = createStore(temp());
+  const a = store.create(book); store.setNote(a, 'Compare with Dorothea.');
+  const b = store.create({ app: 'Safari', url: 'https://x.example/p', pageTitle: 'Micropayments', quote: 'Agents could pay per read.' });
+  b.messages.push({ role: 'user', text: 'Would pennies add up?' }); store.keep(b);
+  store.create({ ...book, quote: 'pending, never kept' });
+  assert.deepEqual(store.search('dorothea').map(h => h.id), [a.id]);
+  assert.deepEqual(store.search('pennies agents').map(h => h.id), [b.id]);
+  assert.deepEqual(store.search('pennies dorothea'), []);
+  assert.deepEqual(store.search('never kept'), []);
 });
