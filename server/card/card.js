@@ -150,7 +150,7 @@
   async function ask() {
     const text = el.input.value.trim(), id = highlight?.id;
     if (!id || !text || streaming !== null) return;
-    if (!account.via) { showError('Margin isn’t connected to a model. Put OPENAI_API_KEY in .env, or run npm run login.'); return; }
+    if (!account.via) { showError('Margin isn’t connected to a model. Put OPENAI_API_KEY or MARGIN_BASE_URL in .env, or run npm run login.'); return; }
     state = 'thread'; streaming = ''; working = ''; el.input.value = ''; showError('');
     const push = m => { if (highlight?.id === id) highlight.messages.push(m); };
     let finished = false;

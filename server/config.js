@@ -24,6 +24,10 @@ export const config = {
   port: 4319,
   loginPort: 4320,
   apiKey: env.OPENAI_API_KEY || '',
+  // Any other server that speaks OpenAI's Chat Completions API: Ollama, LM Studio, OpenRouter… Its key is kept apart
+  // from OPENAI_API_KEY, so an OpenAI key is never sent to someone else's server.
+  baseUrl: (env.MARGIN_BASE_URL || '').replace(/\/+$/, ''),
+  baseKey: env.MARGIN_API_KEY || '',
   model: env.MARGIN_MODEL || '',
   webSearch: !/^(off|false|0|no)$/i.test(env.MARGIN_WEB_SEARCH || 'on'),
   folder: resolve(home(env.MARGIN_DIR || '~/Documents/Margin')),

@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { config, root } from './config.js';
 import { createStore } from './store.js';
-import { account, ask } from './llm.js';
+import { account, ask, searchable } from './llm.js';
 
 // Margin's local server: keeps highlights and talks to the model. The Margin menu-bar app starts it and shows its card
 // (card/card.html) beside your selection. It only listens on 127.0.0.1.
@@ -23,7 +23,7 @@ async function body(req, limit = 8_000_000) {
 const json = (res, data, status = 200) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); };
 
 const routes = [
-  ['GET', /^\/api\/status$/, () => ({ ...account(), folder: store.folder, webSearch: config.webSearch })],
+  ['GET', /^\/api\/status$/, () => ({ ...account(), folder: store.folder, webSearch: searchable() })],
   ['GET', /^\/api\/highlights$/, () => store.all().map(store.view)],
   ['POST', /^\/api\/highlights$/, async req => store.view(store.create(await body(req)))],
   ['GET', /^\/api\/highlights\/([\w-]+)$/, (req, id) => store.view(store.get(id))],
@@ -44,7 +44,7 @@ const routes = [
     const h = store.get(id), { message } = await body(req);
     if (typeof message !== 'string' || !message.trim() || message.length > 20000) throw fail(400, 'Type a question first.');
     if (running.has(id)) throw fail(409, 'An answer is already on its way.');
-    if (!account().via) throw fail(401, 'Margin isn’t connected to a model. Put OPENAI_API_KEY in .env, or run `npm run login`.');
+    if (!account().via) throw fail(401, 'Margin isn’t connected to a model. Put OPENAI_API_KEY or MARGIN_BASE_URL in .env, or run `npm run login`.');
     running.add(id);
     const question = { id: randomUUID(), role: 'user', text: message.trim(), created: Date.now() };
     h.messages.push(question); store.keep(h); store.save(h);   // asking about a highlight keeps it
@@ -95,6 +95,6 @@ server.listen(config.port, '127.0.0.1', () => {
   const a = account();
   console.log(`Margin is running at ${base}`);
   console.log(`Saving highlights to ${store.folder}`);
-  console.log(a.via === 'api-key' ? `Answers: OpenAI API key, model ${a.model}` : a.via === 'chatgpt' ? `Answers: ChatGPT plan (${a.email})${config.model ? `, model ${config.model}` : ''}` : 'Answers: not connected. Put OPENAI_API_KEY in .env or run `npm run login`. Notes still work.');
+  console.log(a.via === 'base-url' ? `Answers: ${a.server}${config.model ? `, model ${config.model}` : ''}` : a.via === 'api-key' ? `Answers: OpenAI API key, model ${a.model}` : a.via === 'chatgpt' ? `Answers: ChatGPT plan (${a.email})${config.model ? `, model ${config.model}` : ''}` : 'Answers: not connected. Put OPENAI_API_KEY or MARGIN_BASE_URL in .env, or run `npm run login`. Notes still work.');
 });
 server.on('error', err => { console.error(err.code === 'EADDRINUSE' ? `Port ${config.port} is in use: Margin is probably running already.` : err.message); process.exit(1); });

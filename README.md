@@ -12,7 +12,7 @@ Everything you keep lands in plain Markdown, one file per book or article: the p
 - **Works where you read.** Browsers, Apple Books, PDFs, Notes: if you can select it, Margin can keep it.
 - **Your garden grows itself.** Each book or article becomes a Markdown file of its highlights, notes and answers, with properties Obsidian and Dataview can query. Point it at your vault and link your own notes to it.
 - **Find it again.** `npm run search -- platforms` searches every passage, note and answer you've kept.
-- **Local first.** Your notes are files on your disk, with no account or cloud. Nothing leaves your Mac until you ask a question, and [here's exactly what's sent](#what-the-model-sees-when-you-ask) when you do.
+- **Local first.** Your notes are files on your disk, with no account or cloud. Nothing leaves your Mac until you ask a question, and [here's exactly what's sent](#what-the-model-sees-when-you-ask) when you do. Run the model locally with Ollama or LM Studio and nothing leaves it at all.
 
 ---
 
@@ -21,7 +21,7 @@ Everything you keep lands in plain Markdown, one file per book or article: the p
 - macOS 14 or later
 - [Node.js](https://nodejs.org) 20 or later (`node -v`)
 - Xcode Command Line Tools, for `swiftc` (`xcode-select --install`)
-- An OpenAI API key **or** a ChatGPT Plus/Pro plan. Notes work without either.
+- A model to answer questions: an OpenAI API key, a ChatGPT Plus/Pro plan, or a local model in [Ollama](https://ollama.com) or [LM Studio](https://lmstudio.ai). Notes work without any of them.
 
 Margin has no npm dependencies, so there's no `npm install` step.
 
@@ -61,7 +61,16 @@ Signed in as you@example.com. Margin will use your ChatGPT plan.
 
 The sign-in is saved in `.auth/chatgpt.json`, which is git-ignored and readable only by you. `npm run logout` signs out.
 
-If both are set, the API key is used.
+**Option C: a local model, or another provider.** Point Margin at any server that speaks OpenAI's Chat Completions API. For [Ollama](https://ollama.com), after `ollama pull llama3.2`:
+
+```sh
+MARGIN_BASE_URL=http://localhost:11434/v1
+MARGIN_MODEL=llama3.2
+```
+
+LM Studio's server is `http://localhost:1234/v1`. For a hosted provider such as OpenRouter, use its address (`https://openrouter.ai/api/v1`) and put its key in `MARGIN_API_KEY`. Margin never sends `OPENAI_API_KEY` to these servers. Web search is an OpenAI feature, so with these, answers come from the source and the model alone.
+
+If more than one is set, `MARGIN_BASE_URL` wins, then the API key, then the ChatGPT sign-in.
 
 ### 3. Build and open the app
 
@@ -198,13 +207,15 @@ Set these in `.env`. Restart Margin after changing them.
 | Setting | Default | |
 |---|---|---|
 | `OPENAI_API_KEY` | empty | Use an API key instead of the ChatGPT sign-in |
-| `MARGIN_MODEL` | first model your plan lists, or `gpt-5.5` with a key | Which model answers |
-| `MARGIN_WEB_SEARCH` | `on` | Let answers search the web |
+| `MARGIN_BASE_URL` | empty | Use another OpenAI-compatible server instead, such as Ollama (`http://localhost:11434/v1`) |
+| `MARGIN_API_KEY` | empty | The key for `MARGIN_BASE_URL`, if it needs one |
+| `MARGIN_MODEL` | first model your plan or server lists, or `gpt-5.5` with a key | Which model answers |
+| `MARGIN_WEB_SEARCH` | `on` | Let answers search the web (OpenAI only) |
 | `MARGIN_DIR` | `~/Documents/Margin` | Where the Markdown notes go |
 
 ## What the model sees when you ask
 
-Nothing leaves your Mac when you save a highlight or a note. When you ask a question, Margin sends OpenAI:
+Nothing leaves your Mac when you save a highlight or a note. When you ask a question, Margin sends the model you connected (OpenAI, or the server in `MARGIN_BASE_URL`):
 
 - **The passage you selected**, tidied up (stray line breaks and hyphens from PDFs removed).
 - **Where it's from:** the kind of source, its title, the author for books, the URL for web pages, and the app's name. For a PDF, only the tidied file name is sent, never the path on your Mac.
@@ -218,14 +229,20 @@ Nothing leaves your Mac when you save a highlight or a note. When you ask a ques
 | Notes, TextEdit and other apps that expose their text | Up to about 800 characters either side of the selection |
 | Apple Books, Preview and most PDF apps | None: just the passage, plus the title and author or the file name |
 
-The model can also search the web when your question goes beyond the source (turn this off with `MARGIN_WEB_SEARCH=off`). It decides what to search for, and the pages it used show as links under the answer.
+> [!WARNING]
+> **Asking from a private page sends that page.** In a browser, Margin sends the text around your selection from whatever page you're on, whether it's a news story or your email, a bank or health portal, or a company wiki. Margin doesn't skip sensitive sites or show you the text before it goes. Saving a highlight or a note never sends anything; only asking does. If you read sensitive pages, use a [local model](#2-connect-a-model-pick-one) so nothing leaves your Mac, or don't ask questions from those pages.
 
-Nothing else is sent: no screenshots, other tabs, clipboard contents, the rest of the book or document, or your other highlights. Each question is sent with `store: false`, so OpenAI doesn't save the response for later retrieval, and the conversation won't appear in your ChatGPT history.
+With OpenAI, the model can also search the web when your question goes beyond the source (turn this off with `MARGIN_WEB_SEARCH=off`). It decides what to search for, so parts of your question can end up in search queries. The pages it used show as links under the answer.
+
+Nothing else is sent: no screenshots, other tabs, clipboard contents, the rest of the book or document, or your other highlights.
+
+**What OpenAI keeps.** Questions are sent with `store: false`, so OpenAI doesn't keep the response for later retrieval. That isn't the same as keeping nothing: OpenAI can still hold requests for a while (up to 30 days for its API) to check for abuse, under [its own data policies](https://openai.com/policies/). The same goes for any hosted provider in `MARGIN_BASE_URL`. With a local model, your questions never leave your Mac.
 
 ## Privacy
 
 - The server only listens on `127.0.0.1:4319`. It rejects requests from other sites and other host names.
-- Nothing leaves your Mac until you ask a question; [what the model sees](#what-the-model-sees-when-you-ask) lists exactly what's sent then.
+- Nothing leaves your Mac until you ask a question; [what the model sees](#what-the-model-sees-when-you-ask) lists exactly what's sent then. In a browser that includes the text of the page you're on, even a private one.
+- With a local model in `MARGIN_BASE_URL`, questions don't leave your Mac either.
 - Notes stay in your folder ([what's saved](#whats-saved-when-you-capture)). Margin has no account, sync or analytics of its own.
 - Your ChatGPT sign-in is kept in `.auth/chatgpt.json` in the Margin folder, readable only by your user account and never committed to git. `npm run logout` deletes it and asks OpenAI to revoke it.
 
@@ -235,7 +252,8 @@ Nothing else is sent: no screenshots, other tabs, clipboard contents, the rest o
 - **"Margin needs Accessibility access"**: turn it on as described in step 3, then quit and reopen Margin. If it's already on but still fails after a rebuild, remove Margin from the list, add it again, and see the signing note above.
 - **"⌃⌥M is taken"**: another app has the shortcut. Quit that app and reopen Margin.
 - **"Margin's server isn't running"**: open **Open Server Log** from the menu-bar **M**. Running `npm start` in a terminal shows the same output. When a server is already running, the app uses it instead of starting its own.
-- **"Margin isn't connected to a model"**: add `OPENAI_API_KEY` to `.env` or run `npm run login`, then restart Margin. Saving notes still works.
+- **"Margin isn't connected to a model"**: add `OPENAI_API_KEY` or `MARGIN_BASE_URL` to `.env`, or run `npm run login`, then restart Margin. Saving notes still works.
+- **"Couldn't reach http://localhost:11434/v1"**: the server in `MARGIN_BASE_URL` isn't running. Open Ollama or start LM Studio's server, then ask again.
 - **Nothing happens in Books**: make sure some text is actually selected. Books lets Margin copy only a selection.
 
 ## How it works
@@ -249,7 +267,7 @@ server/    Node server with no npm dependencies: saves highlights, calls the mod
 
 1. On ⌃⌥M, the app reads the selection from the app in front through Accessibility. Where that doesn't work (Books, some PDF apps), it presses the app's own **Edit ▸ Copy** and then puts your clipboard back. For browsers it also reads the page's URL, title and text.
 2. The app sends this to the server, which keeps a *pending* highlight in memory. The card then appears beside the pointer, in a window that never takes focus away from what you're reading.
-3. A note, a question or ↩ keeps the highlight, and it's written to disk. Questions stream from OpenAI's Responses API.
+3. A note, a question or ↩ keeps the highlight, and it's written to disk. Questions stream from OpenAI's Responses API, or from the Chat Completions API of the server in `MARGIN_BASE_URL`.
 
 To trigger a capture from Shortcuts, Raycast or a script instead of the hotkey:
 
