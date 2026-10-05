@@ -4,7 +4,7 @@
 
 A question pops into your head halfway through a paragraph. Select the passage, press **⌃⌥M**, and a small card opens right beside it, in Chrome, Apple Books, Preview or almost any other Mac app. Jot a note, or ask a question and get an answer that already knows what you're reading. No copying into a chat window, no switching apps, and you never lose your place.
 
-![Margin answering a question about a highlighted passage in a Nieman Lab story, right beside the text](docs/screenshots/02-ask.png)
+![Selecting a sentence in a PDF, pressing ⌃⌥M, asking a question and getting an answer right beside the text](docs/demo.gif)
 
 - **Works where you already read.** Browsers, Apple Books, PDFs, Notes: if you can select the text, Margin can pick it up.
 - **Answers in context.** The model sees the passage, the page around it, and the book or article it came from. When that isn't enough, it can search the web.
@@ -96,9 +96,13 @@ Every screenshot here is real: real selections, real typed questions, live answe
 
 ![The Margin card opening next to the selected sentence](docs/screenshots/01-card.png)
 
-Ask *"Could agent micropayments ever add up to an $80 subscription?"* with ⌘↩, and the card turns into the conversation at the top of this page. The answer works from the article's own numbers, because Margin sent the page around the passage along with your question ([what gets sent](#what-the-model-sees-when-you-ask)). Sources it looked up appear as links underneath.
+Ask *"Could agent micropayments ever add up to an $80 subscription?"* with ⌘↩, and the card turns into a conversation:
 
-**2. A book.** In Tim Wu's *The Age of Extraction* in Apple Books, a line about "neutrality rules for platforms" begs the obvious next question: *"What would neutrality rules look like for AI platforms?"* Margin already knows the book and its author, so you don't have to explain where the quote came from. Keep the conversation going with follow-ups in the same card.
+![Margin answering a question about a highlighted passage in a Nieman Lab story, right beside the text](docs/screenshots/02-ask.png)
+
+The answer works from the article's own numbers, because Margin sent the page around the passage along with your question ([what gets sent](#what-the-model-sees-when-you-ask)). Sources it looked up appear as links underneath.
+
+**2. A book.** In Tim Wu's *The Age of Extraction* in Apple Books, a line about "neutrality rules for platforms" begs the obvious next question: *"What would neutrality rules look like for AI platforms?"* Margin already knows the book and its author, so you don't have to explain where the quote came from. Keep the conversation going with follow-ups in the same card. (The book's page is blurred in the screenshot, apart from the passage.)
 
 ![Asking about a passage in The Age of Extraction in Apple Books](docs/screenshots/03-books.png)
 
