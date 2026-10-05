@@ -1,17 +1,18 @@
 # Margin
 
-**Ask about what you're reading, right where you're reading it.**
+**A digital garden that grows while you read.**
 
-A question pops into your head halfway through a paragraph. Select the passage, press **⌃⌥M**, and a small card opens right beside it, in Chrome, Apple Books, Preview or almost any other Mac app. Jot a note, or ask a question and get an answer that already knows what you're reading. No copying into a chat window, no switching apps, and you never lose your place.
+Select a passage in Chrome, Apple Books, Preview or almost any Mac app and press **⌃⌥M**. A small card opens beside it. Press ↩ to keep the highlight, type a note, or ask a question and get an answer that already knows what you're reading.
 
-And nothing you read that way is lost afterwards. Every highlight, note and answer is kept as plain Markdown, so over time it adds up to a searchable record of what you've read and thought about: the raw material for a digital garden or a Zettelkasten.
+Everything you keep lands in plain Markdown, one file per book or article: the passage, your note, the conversation. A few months in, you have a searchable record of what you read and what you thought about it, ready to link to from Obsidian or grow into a garden.
 
 ![Selecting a sentence in a Nieman Lab story, pressing ⌃⌥M, asking which publishers have licensing deals with OpenAI, and getting a sourced answer right beside the text](docs/demo.gif)
 
-- **Works where you already read.** Browsers, Apple Books, PDFs, Notes: if you can select the text, Margin can pick it up.
-- **Answers in context.** The model sees the passage, the page around it, and the book or article it came from. When that isn't enough, it can search the web.
-- **A knowledge base that builds itself.** Everything you keep lands in plain Markdown, one file per book or article, with properties Obsidian can sort and query. Search across all of it with `npm run search`, or point the folder at your vault and link your own notes to it.
-- **Private by default.** Nothing leaves your Mac until you ask a question, and then only the passage, where it came from and the text around it. Margin has no account, no cloud of its own and no tracking: your notes are just files on your disk.
+- **One note per source.** Each book or article becomes a Markdown file with properties Obsidian and Dataview can query. Point it at your vault and your reading shows up as literature notes.
+- **Questions become notes too.** Answers are saved under the passage they're about, with their sources. The model sees the passage, the text around it and where it's from, and can search the web.
+- **Captured where you read.** Browsers, Apple Books, PDFs, Notes: if you can select it, Margin can keep it. No copying into a chat window, no losing your place.
+- **Find it again.** `npm run search -- platforms` searches every passage, note and answer you've kept.
+- **Local first.** Your notes are files on your disk, with no account or cloud. Nothing leaves your Mac until you ask a question, and [here's exactly what's sent](#what-the-model-sees-when-you-ask) when you do.
 
 ---
 
@@ -112,9 +113,11 @@ The answer works from the article's own numbers, because Margin sent the page ar
 
 ![Writing a note on a sentence in a PDF open in Preview](docs/screenshots/04-pdf.png)
 
-### Your notes, and finding them again
+### From highlights to a garden
 
-Everything you keep ends up in one Markdown file per book or article, in `~/Documents/Margin` (or the folder in `MARGIN_DIR`). Each file collects every highlight, note and conversation for that source, oldest first, under a few properties describing the source:
+Margin keeps your *literature notes*: what each source said, and what you asked about it in the moment. Your garden grows on top of them.
+
+Every book or article gets one Markdown file in `~/Documents/Margin` (or `MARGIN_DIR`), collecting its highlights, notes and conversations, oldest first, under properties describing the source:
 
 ```markdown
 ---
@@ -156,7 +159,7 @@ Algorithmic attention rents a theory of digital platform market power  (5 Oct 20
 
 Add `--json` to get the full matches (passages, notes and whole conversations) for scripts or other tools.
 
-**Use it in Obsidian.** Set `MARGIN_DIR` to a folder inside your vault (here, one called `Margin`) and every book and article you've read shows up as a note, with its properties shown at the top. With the Dataview plugin, you can list them like any other notes:
+**Open it in Obsidian.** Set `MARGIN_DIR` to a folder inside your vault (here, one called `Margin`) and every book and article you've read shows up as a note, with its properties shown at the top. With the Dataview plugin, you can list them like any other notes:
 
 ````markdown
 ```dataview
@@ -166,7 +169,7 @@ SORT last_highlight DESC
 ```
 ````
 
-**Build a digital garden or Zettelkasten on top.** Treat Margin's files as your *literature notes*: what the source said, and what you asked about it in the moment. Write your own *permanent notes* separately and link to them with `[[The Age of Extraction]]`. Keep your own writing in your own files, because Margin rewrites a source's file each time you add a highlight to it.
+**Link your own thinking to it.** Write your *permanent notes* in your own files and link to sources with `[[The Age of Extraction]]`. Over time, a book you highlighted in March and a paper you read in September end up a link apart. Keep your writing out of Margin's files, though: Margin rewrites a source's file each time you add a highlight to it.
 
 ### What's saved when you capture
 
