@@ -1,12 +1,14 @@
 # Margin
 
-**Highlight text in any Mac app, press ⌃⌥M, and keep a note or ask a question about it.**
+**Ask about what you're reading, right where you're reading it.**
 
-Margin is a small menu-bar app for reading on a Mac. Select a passage in a browser, Apple Books, Preview or most other apps. Press **⌃⌥M** and a card opens beside it. Write a note, or ask a question and get an answer that knows what you were reading. Everything is saved as plain Markdown, one file per book or page, in a folder you choose. Pointing that folder at your Obsidian vault works well.
+A question pops into your head halfway through a paragraph. Select the passage, press **⌃⌥M**, and a small card opens right beside it, in Chrome, Apple Books, Preview or almost any other Mac app. Jot a note, or ask a question and get an answer that already knows what you're reading. No copying into a chat window, no switching apps, and you never lose your place.
 
 ![The Margin card next to a passage selected in a Nieman Lab story in Chrome](docs/screenshots/01-card.png)
 
-There's no reader app or library to learn. Your notes are Markdown files, so open them in any editor.
+- **Works where you already read.** Browsers, Apple Books, PDFs, Notes: if you can select the text, Margin can pick it up.
+- **Answers in context.** The model sees the passage, the page around it, and the book or article it came from. When that isn't enough, it can search the web.
+- **Notes you own.** Everything you keep lands in plain Markdown, one file per book or article. Point the folder at your Obsidian vault and your highlights show up there.
 
 ---
 
@@ -21,10 +23,12 @@ Margin has no npm dependencies, so there's no `npm install` step.
 
 ## Setup
 
+Setup takes about five minutes.
+
 ### 1. Get the code
 
 ```sh
-git clone https://github.com/<you>/margin.git
+git clone https://github.com/szaryw/margin.git
 cd margin
 cp .env.example .env
 ```
@@ -74,7 +78,7 @@ To start Margin when you log in, add `Margin.app` in **System Settings ▸ Gener
 
 ### Select, then ⌃⌥M
 
-Select some text and press **⌃⌥M**. The card opens next to your selection and shows where the text is from. Nothing is saved yet.
+Select some text and press **⌃⌥M**. The card opens next to your selection and already knows where the text is from. Nothing is saved until you say so:
 
 | You press | What happens |
 |---|---|
@@ -85,23 +89,23 @@ Select some text and press **⌃⌥M**. The card opens next to your selection an
 
 ### Walkthrough
 
-These screenshots were taken with Margin running for real: real selections, typed questions and live answers from the model.
+Every screenshot here is real: real selections, real typed questions, live answers.
 
-**1. A web page.** In a [Nieman Lab story](https://www.niemanlab.org/2026/05/sam-altman-backs-micropayment-model-for-ai-agents-to-compensate-publishers/) about agents paying publishers per read, select the sentence about matching an $80 subscription, then press ⌃⌥M (the screenshot at the top). Ask *"Could agent micropayments ever add up to an $80 subscription?"* with ⌘↩. Margin sends the passage along with the page around it, so the answer works from the article's own figures. Web results appear as links under the answer.
+**1. A news story.** You're reading a [Nieman Lab piece](https://www.niemanlab.org/2026/05/sam-altman-backs-micropayment-model-for-ai-agents-to-compensate-publishers/) about AI agents paying publishers per read, and you wonder whether those pennies could ever add up. Select the sentence, press ⌃⌥M (that's the screenshot at the top), and ask *"Could agent micropayments ever add up to an $80 subscription?"* The answer works from the article's own numbers, because Margin sent the page along with your question. Sources it looked up appear as links underneath.
 
 ![A conversation about the highlighted passage](docs/screenshots/02-ask.png)
 
-**2. A book.** In Apple Books, reading Tim Wu's *The Age of Extraction*, select a passage and ask *"What would neutrality rules look like for AI platforms?"* Margin gets the title and author from Books' own copy citation. Keep asking follow-ups in the same card.
+**2. A book.** In Tim Wu's *The Age of Extraction* in Apple Books, a line about "neutrality rules for platforms" begs the obvious next question: *"What would neutrality rules look like for AI platforms?"* Margin already knows the book and its author, so you don't have to explain where the quote came from. Keep the conversation going with follow-ups in the same card.
 
 ![Asking about a passage in The Age of Extraction in Apple Books](docs/screenshots/03-books.png)
 
-**3. A PDF.** In Preview, on O'Reilly, Strauss & Mazzucato's paper [*Algorithmic attention rents*](https://doi.org/10.1017/dap.2024.1), select the sentence on disclosure and type a note to yourself instead. **↩** saves it, with no question asked.
+**3. A PDF.** Not every thought needs an answer. Reading O'Reilly, Strauss & Mazzucato's paper [*Algorithmic attention rents*](https://doi.org/10.1017/dap.2024.1) in Preview, select the sentence on disclosure, type a quick note linking it back to Wu, and press **↩**. Saved, and you're back to reading.
 
 ![Writing a note on a sentence in a PDF open in Preview](docs/screenshots/04-pdf.png)
 
 ### Your notes
 
-Each book or page gets one Markdown file in `~/Documents/Margin` (or the folder in `MARGIN_DIR`). The file holds every highlight, note and conversation for that source, oldest first:
+Everything you keep ends up in one Markdown file per book or article, in `~/Documents/Margin` (or the folder in `MARGIN_DIR`). Each file collects every highlight, note and conversation for that source, oldest first. You get a reading log that writes itself:
 
 ![The Markdown file Margin wrote for the Nieman Lab story, open in iA Writer](docs/screenshots/05-notes.png)
 
