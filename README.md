@@ -9,6 +9,7 @@ A question pops into your head halfway through a paragraph. Select the passage, 
 - **Works where you already read.** Browsers, Apple Books, PDFs, Notes: if you can select the text, Margin can pick it up.
 - **Answers in context.** The model sees the passage, the page around it, and the book or article it came from. When that isn't enough, it can search the web.
 - **Notes you own.** Everything you keep lands in plain Markdown, one file per book or article. Point the folder at your Obsidian vault and your highlights show up there.
+- **Private by default.** Nothing leaves your Mac until you ask a question, and then only the passage, where it came from and the text around it. Margin has no account, no cloud of its own and no tracking: your notes are just files on your disk.
 
 ---
 
@@ -123,7 +124,14 @@ Everything you keep ends up in one Markdown file per book or article, in `~/Docu
 *Note:* Disclosure as the remedy: compare Wu's neutrality rules. Which metrics exactly?
 ```
 
-Margin also keeps a JSON copy of each highlight in a hidden `.margin/` subfolder, for itself. You can edit or move the Markdown files, but Margin rewrites a source's file whenever you add to that source.
+### What's saved when you capture
+
+Pressing ⌃⌥M doesn't write anything yet. The highlight waits in memory until you keep it (a note, a question, or ↩), and **Esc** throws it away without a trace. Once you keep it, Margin writes two things to your notes folder, and nothing anywhere else:
+
+- **The Markdown file** for that book or article: the passage, your note, any conversation, when you captured it, and where it came from (title and author, the URL, or for a PDF its file name and location on your Mac).
+- **A JSON copy** in a hidden `.margin/` subfolder, which Margin reads when it starts. It holds the same details, plus the text around the passage that goes with your questions (up to about 6,000 characters of a web page) and which model answered.
+
+Margin never saves screenshots, whole pages or documents, or anything from your clipboard. You can edit or move the Markdown files, but Margin rewrites a source's file whenever you add to that source.
 
 Choose **Show Highlights in Finder** from the menu-bar **M** to open the folder.
 
@@ -171,7 +179,8 @@ Nothing else is sent: no screenshots, other tabs, clipboard contents, the rest o
 
 - The server only listens on `127.0.0.1:4319`. It rejects requests from other sites and other host names.
 - Nothing leaves your Mac until you ask a question; [what the model sees](#what-the-model-sees-when-you-ask) lists exactly what's sent then.
-- Notes stay in your folder. Margin has no account or sync of its own.
+- Notes stay in your folder ([what's saved](#whats-saved-when-you-capture)). Margin has no account, sync or analytics of its own.
+- Your ChatGPT sign-in is kept in `.auth/chatgpt.json` in the Margin folder, readable only by your user account and never committed to git. `npm run logout` deletes it and asks OpenAI to revoke it.
 
 ## Troubleshooting
 
