@@ -4,7 +4,7 @@
 
 A question pops into your head halfway through a paragraph. Select the passage, press **⌃⌥M**, and a small card opens right beside it, in Chrome, Apple Books, Preview or almost any other Mac app. Jot a note, or ask a question and get an answer that already knows what you're reading. No copying into a chat window, no switching apps, and you never lose your place.
 
-![The Margin card next to a passage selected in a Nieman Lab story in Chrome](docs/screenshots/01-card.png)
+![Margin answering a question about a highlighted passage in a Nieman Lab story, right beside the text](docs/screenshots/02-ask.png)
 
 - **Works where you already read.** Browsers, Apple Books, PDFs, Notes: if you can select the text, Margin can pick it up.
 - **Answers in context.** The model sees the passage, the page around it, and the book or article it came from. When that isn't enough, it can search the web.
@@ -91,9 +91,11 @@ Select some text and press **⌃⌥M**. The card opens next to your selection an
 
 Every screenshot here is real: real selections, real typed questions, live answers.
 
-**1. A news story.** You're reading a [Nieman Lab piece](https://www.niemanlab.org/2026/05/sam-altman-backs-micropayment-model-for-ai-agents-to-compensate-publishers/) about AI agents paying publishers per read, and you wonder whether those pennies could ever add up. Select the sentence, press ⌃⌥M (that's the screenshot at the top), and ask *"Could agent micropayments ever add up to an $80 subscription?"* The answer works from the article's own numbers, because Margin sent the page along with your question. Sources it looked up appear as links underneath.
+**1. A news story.** You're reading a [Nieman Lab piece](https://www.niemanlab.org/2026/05/sam-altman-backs-micropayment-model-for-ai-agents-to-compensate-publishers/) about AI agents paying publishers per read, and you wonder whether those pennies could ever add up. Select the sentence and press ⌃⌥M:
 
-![A conversation about the highlighted passage](docs/screenshots/02-ask.png)
+![The Margin card opening next to the selected sentence](docs/screenshots/01-card.png)
+
+Ask *"Could agent micropayments ever add up to an $80 subscription?"* with ⌘↩, and the card turns into the conversation at the top of this page. The answer works from the article's own numbers, because Margin sent the page along with your question. Sources it looked up appear as links underneath.
 
 **2. A book.** In Tim Wu's *The Age of Extraction* in Apple Books, a line about "neutrality rules for platforms" begs the obvious next question: *"What would neutrality rules look like for AI platforms?"* Margin already knows the book and its author, so you don't have to explain where the quote came from. Keep the conversation going with follow-ups in the same card.
 
