@@ -1,16 +1,16 @@
 # Margin
 
-**A digital garden that grows while you read.**
+**Ask questions and take notes on anything you read, and grow a digital garden along the way.**
 
-Select a passage in Chrome, Apple Books, Preview or almost any Mac app and press **⌃⌥M**. A small card opens beside it. Press ↩ to keep the highlight, type a note, or ask a question and get an answer that already knows what you're reading.
+Select a passage in Chrome, Apple Books, Preview or almost any Mac app and press **⌃⌥M**. A small card opens beside it. Ask a question and get an answer that already knows what you're reading, or jot a note and get back to the page.
 
-Everything you keep lands in plain Markdown, one file per book or article: the passage, your note, the conversation. A few months in, you have a searchable record of what you read and what you thought about it, ready to link to from Obsidian or grow into a garden.
+Everything you keep lands in plain Markdown, one file per book or article: the passage, your note, the conversation. Read for a few months and those files add up to a garden of what you've read and what you thought about it, ready to search, link and grow in Obsidian.
 
 ![Selecting a sentence in a Nieman Lab story, pressing ⌃⌥M, asking which publishers have licensing deals with OpenAI, and getting a sourced answer right beside the text](docs/demo.gif)
 
-- **One note per source.** Each book or article becomes a Markdown file with properties Obsidian and Dataview can query. Point it at your vault and your reading shows up as literature notes.
-- **Questions become notes too.** Answers are saved under the passage they're about, with their sources. The model sees the passage, the text around it and where it's from, and can search the web.
-- **Captured where you read.** Browsers, Apple Books, PDFs, Notes: if you can select it, Margin can keep it. No copying into a chat window, no losing your place.
+- **Ask without leaving the page.** The model sees the passage, the text around it and where it's from, and can search the web. No copying into a chat window, no losing your place.
+- **Works where you read.** Browsers, Apple Books, PDFs, Notes: if you can select it, Margin can keep it.
+- **Your garden grows itself.** Each book or article becomes a Markdown file of its highlights, notes and answers, with properties Obsidian and Dataview can query. Point it at your vault and link your own notes to it.
 - **Find it again.** `npm run search -- platforms` searches every passage, note and answer you've kept.
 - **Local first.** Your notes are files on your disk, with no account or cloud. Nothing leaves your Mac until you ask a question, and [here's exactly what's sent](#what-the-model-sees-when-you-ask) when you do.
 
