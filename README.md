@@ -95,7 +95,7 @@ Every screenshot here is real: real selections, real typed questions, live answe
 
 ![The Margin card opening next to the selected sentence](docs/screenshots/01-card.png)
 
-Ask *"Could agent micropayments ever add up to an $80 subscription?"* with ⌘↩, and the card turns into the conversation at the top of this page. The answer works from the article's own numbers, because Margin sent the page along with your question. Sources it looked up appear as links underneath.
+Ask *"Could agent micropayments ever add up to an $80 subscription?"* with ⌘↩, and the card turns into the conversation at the top of this page. The answer works from the article's own numbers, because Margin sent the page around the passage along with your question ([what gets sent](#what-the-model-sees-when-you-ask)). Sources it looked up appear as links underneath.
 
 **2. A book.** In Tim Wu's *The Age of Extraction* in Apple Books, a line about "neutrality rules for platforms" begs the obvious next question: *"What would neutrality rules look like for AI platforms?"* Margin already knows the book and its author, so you don't have to explain where the quote came from. Keep the conversation going with follow-ups in the same card.
 
@@ -147,10 +147,30 @@ Set these in `.env`. Restart Margin after changing them.
 | `MARGIN_WEB_SEARCH` | `on` | Let answers search the web |
 | `MARGIN_DIR` | `~/Documents/Margin` | Where the Markdown notes go |
 
+## What the model sees when you ask
+
+Nothing leaves your Mac when you save a highlight or a note. When you ask a question, Margin sends OpenAI:
+
+- **The passage you selected**, tidied up (stray line breaks and hyphens from PDFs removed).
+- **Where it's from:** the kind of source, its title, the author for books, the URL for web pages, and the app's name. For a PDF, only the tidied file name is sent, never the path on your Mac.
+- **Your note**, if you wrote one.
+- **The conversation so far** in that card, so follow-ups make sense.
+- **Text around the passage**, when the app makes it available:
+
+| Reading in | Text around the passage |
+|---|---|
+| Safari, Chrome, Arc, Brave, Edge | About 6,000 characters of the page around your selection, read from the page your browser has open (pages you're logged into included) |
+| Notes, TextEdit and other apps that expose their text | Up to about 800 characters either side of the selection |
+| Apple Books, Preview and most PDF apps | None: just the passage, plus the title and author or the file name |
+
+The model can also search the web when your question goes beyond the source (turn this off with `MARGIN_WEB_SEARCH=off`). It decides what to search for, and the pages it used show as links under the answer.
+
+Nothing else is sent: no screenshots, other tabs, clipboard contents, the rest of the book or document, or your other highlights. Each question is sent with `store: false`, so OpenAI doesn't save the response for later retrieval, and the conversation won't appear in your ChatGPT history.
+
 ## Privacy
 
 - The server only listens on `127.0.0.1:4319`. It rejects requests from other sites and other host names.
-- Nothing leaves your Mac until you ask a question. At that point the passage, its source and the nearby text go to OpenAI with `store: false`. Conversations don't appear in your ChatGPT history.
+- Nothing leaves your Mac until you ask a question; [what the model sees](#what-the-model-sees-when-you-ask) lists exactly what's sent then.
 - Notes stay in your folder. Margin has no account or sync of its own.
 
 ## Troubleshooting
