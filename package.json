@@ -1,0 +1,14 @@
+{
+  "name": "margin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Highlight text in any Mac app, press ⌃⌥M, and keep a note or ask a question about it.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server/index.js",
+    "login": "node server/login.js",
+    "logout": "node server/login.js --logout",
+    "test": "node --test server/*.test.js"
+  }
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Margin</title>
+  <link rel="stylesheet" href="/card.css">
+</head>
+<body>
+  <div class="card" id="card" hidden>
+    <div class="head">
+      <span class="spinner" hidden></span>
+      <span class="meta"></span>
+      <button type="button" class="close" title="Close (esc)" aria-label="Close" hidden>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="body" hidden>
+      <button type="button" class="quote" title="Show the whole passage"><span></span></button>
+      <div class="thread"></div>
+      <p class="error" hidden></p>
+    </div>
+    <div class="foot" hidden>
+      <div class="field">
+        <textarea rows="1" aria-label="Note or question"></textarea>
+        <button type="button" class="hint" title="Keep this highlight without a note">↩ save</button>
+        <button type="button" class="send" title="Ask (↩)" aria-label="Ask" hidden>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        </button>
+      </div>
+      <div class="actions" hidden>
+        <span class="model"></span>
+        <button type="button" data-action="save">Save note <kbd>↩</kbd></button>
+        <button type="button" data-action="ask">Ask <kbd>⌘↩</kbd></button>
+      </div>
+    </div>
+  </div>
+  <script src="/card.js"></script>
+</body>
+</html>
