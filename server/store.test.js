@@ -85,11 +85,11 @@ test('.env values are read, quoted or not', () => {
   assert.deepEqual(readEnv(file), { OPENAI_API_KEY: 'sk-test', MARGIN_MODEL: 'gpt-5.5', MARGIN_DIR: '~/Notes' });
 });
 
-test('notes start with properties Obsidian can query', () => {
+test('notes start with properties tools can query', () => {
   const dir = temp(), store = createStore(dir);
   store.keep(store.create(book));
   const md = readFileSync(join(dir, 'Middlemarch.md'), 'utf8');
-  assert.match(md, /^---\ntitle: "Middlemarch"\nauthor: "George Eliot"\ntype: "book"\napp: "Books"\nhighlights: 1\nfirst_highlight: \d{4}-\d\d-\d\d\nlast_highlight: \d{4}-\d\d-\d\d\n---\n\n# Middlemarch/);
+  assert.match(md, /^---\ntitle: "Middlemarch"\nauthor: "George Eliot"\ntype: "book"\napp: "Books"\nhighlights: 1\nfirst_highlight: \d{4}-\d\d-\d\d\nlast_highlight: \d{4}-\d\d-\d\d\n---\n\n<!-- Written by Margin\. Edits here are overwritten when you add to this source\. -->\n\n# Middlemarch/);
 });
 
 test('search finds highlights by passage, note or conversation, and needs every word', () => {

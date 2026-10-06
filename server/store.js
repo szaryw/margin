@@ -4,7 +4,8 @@ import { join } from 'node:path';
 
 // Highlights are plain files in one folder:
 //   <folder>/<Source title>.md        every highlight from that book or page, with its note and conversation
-//   <folder>/.margin/<id>.json        the same, for Margin (hidden, so Obsidian and Finder show only the notes)
+//   <folder>/.margin/<id>.json        the same, for Margin (hidden, so Finder and other tools see only the notes)
+// The Markdown is generated from the JSON and rewritten whenever its source changes, so it's for reading, not editing.
 // A highlight starts pending, in memory only. It's written once it's kept: with a note, a question, or Enter on its own.
 export function createStore(folder) {
   const dataDir = join(folder, '.margin');
@@ -41,7 +42,7 @@ export function createStore(folder) {
         : m.text.trim() + (m.sources?.length ? `\n\n<small>Sources: ${m.sources.map(x => `[${x.title}](${x.url})`).join(', ')}</small>` : ''));
       return [`## ${when}`, `> ${h.quote.trim().replace(/\n/g, '\n> ')}`, h.note && `*Note:* ${h.note}`, ...talk].filter(Boolean).join('\n\n');
     });
-    // Properties up top, so Obsidian (and Dataview) can sort and query sources: every book, everything from this month…
+    // Properties up top, so tools and agents can sort and filter sources: every book, everything from this month…
     const day = t => new Date(t).toISOString().slice(0, 10);
     const props = {
       title: s.title, author: s.author, type: s.kind === 'file' ? 'pdf' : s.kind, url: s.url, path: s.path, app: s.app,
@@ -49,7 +50,7 @@ export function createStore(folder) {
     };
     const yaml = Object.entries(props).filter(([, v]) => v !== undefined && v !== '')
       .map(([k, v]) => `${k}: ${typeof v === 'number' || /^\d{4}-\d\d-\d\d$/.test(v) ? v : JSON.stringify(v)}`).join('\n');
-    return `---\n${yaml}\n---\n\n# ${s.title}\n\n${meta ? `*${meta}*\n\n` : ''}${sections.join('\n\n---\n\n')}\n`;
+    return `---\n${yaml}\n---\n\n<!-- Written by Margin. Edits here are overwritten when you add to this source. -->\n\n# ${s.title}\n\n${meta ? `*${meta}*\n\n` : ''}${sections.join('\n\n---\n\n')}\n`;
   }
 
   /** Highlights matching every word of the query, in the passage, note, conversation or source; best matches first. */
